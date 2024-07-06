@@ -1,11 +1,11 @@
 package com.sparktobloom.receipts.repository
 
+import com.sparktobloom.receipts.data.InStoreItem
 import com.sparktobloom.receipts.data.UserRequestDto
 import com.sparktobloom.receipts.data.ValidateEmailBody
 import com.sparktobloom.receipts.utils.ApiConsumer
 import com.sparktobloom.receipts.utils.RequestStatus
 import com.sparktobloom.receipts.utils.ServerMessage
-import com.sparktobloom.receipts.utils.SimplifiedMessage
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
 
@@ -73,7 +73,24 @@ class SparkRepository(private val consumer: ApiConsumer) {
     suspend fun uploadInStore(accessToken: String, refreshToken: String, file: MultipartBody.Part) = flow {
         emit(RequestStatus.Waiting)
         val cookie = "refresh_token=$refreshToken"
-        val response = consumer.uploadinstore("Bearer $accessToken", cookie, file)
+        val response = consumer.uploadInStore("Bearer $accessToken", cookie, file)
+        if (response.isSuccessful) {
+            emit(RequestStatus.Success(response.body()!!))
+        } else {
+            val errorBody = response.errorBody()?.string()
+            val errorMessage = if (errorBody != null) {
+                ServerMessage.get(errorBody)
+            } else {
+                "Unknown error occurred"
+            }
+            emit(RequestStatus.Error(errorMessage))
+        }
+    }
+
+    suspend fun saveInStore(accessToken: String, refreshToken: String, item: InStoreItem) = flow {
+        emit(RequestStatus.Waiting)
+        val cookie = "refresh_token=$refreshToken"
+        val response = consumer.saveInStore("Bearer $accessToken", cookie, item)
         if (response.isSuccessful) {
             emit(RequestStatus.Success(response.body()!!))
         } else {

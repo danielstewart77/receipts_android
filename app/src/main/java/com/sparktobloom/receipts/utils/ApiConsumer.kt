@@ -28,7 +28,7 @@ interface ApiConsumer {
         @Header("Cookie") cookie: String,
     ): Response<Boolean>
 
-    @POST("uploadreceipt")
+    @POST("upload_receipt")
     @Multipart
     suspend fun uploadReceipt(
         @Header("Authorization") token: String,
@@ -36,13 +36,20 @@ interface ApiConsumer {
         @Part file: MultipartBody.Part
     ): Response<Any>
 
-    @POST("uploadinstore")
+    @POST("upload_in_store")
     @Multipart
-    suspend fun uploadinstore(
+    suspend fun uploadInStore(
         @Header("Authorization") token: String,
         @Header("Cookie") cookie: String,
         @Part file: MultipartBody.Part
     ): Response<InStoreItem>
+
+    @POST("save_in_store")
+    suspend fun saveInStore(
+        @Header("Authorization") token: String,
+        @Header("Cookie") cookie: String,
+        @Body jsonBody: InStoreItem
+    ): Response<Any>
 
     @POST("chat")
     suspend fun chat(

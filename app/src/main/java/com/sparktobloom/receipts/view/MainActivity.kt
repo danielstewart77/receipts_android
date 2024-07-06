@@ -1,6 +1,7 @@
 package com.sparktobloom.receipts.view
 
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -26,8 +27,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.sparktobloom.receipts.R
+import com.sparktobloom.receipts.data.InStoreItem
 import com.sparktobloom.receipts.data.UserResponseDto
 import com.sparktobloom.receipts.databinding.ActivityMainBinding
+import com.sparktobloom.receipts.model.ConfirmationItem
 import com.sparktobloom.receipts.model.ReceiptUser
 import com.sparktobloom.receipts.model.ReceiptUserSingleton
 import com.sparktobloom.receipts.repository.SparkRepository
@@ -382,6 +385,7 @@ class MainActivity : AppCompatActivity() {
                             "Upload successful",
                             Toast.LENGTH_LONG
                         ).show()
+                        confirmation(it.data)
                     }
 
                     is RequestStatus.Error -> {
@@ -394,6 +398,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun confirmation(inStoreItem: InStoreItem){
+        ConfirmationItem.inStore = InStoreItem(
+            inStoreItem.storeName,
+            inStoreItem.itemName,
+            inStoreItem.units,
+            inStoreItem.unitPrice,
+            inStoreItem.totalPrice)
+
+        startActivity(Intent(this, InStoreConfirmActivity::class.java))
     }
 
     private fun createFileFromInputStream(inputStream: InputStream?, fileName: String): File {

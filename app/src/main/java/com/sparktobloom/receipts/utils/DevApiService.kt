@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object DevApiService {
-    private const val BASE_URL = "https://192.168.4.64:8000/receipts/"
+    private const val BASE_URL = "https://47.160.170.247:8000/receipts/"
 
     fun getService(context: Context): ApiConsumer {
 

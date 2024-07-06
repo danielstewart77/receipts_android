@@ -1,7 +1,14 @@
 package com.sparktobloom.receipts.model;
 
+import com.sparktobloom.receipts.data.InStoreItem
+
 object ReceiptUserSingleton {
-    var user: ReceiptUser? =null
+    var user: ReceiptUser? = null
+}
+
+object ConfirmationItem {
+    var inStore: InStoreItem? = null
+    var receipt: String? = null
 }
 
 data class ReceiptUser (
